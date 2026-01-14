@@ -15,7 +15,7 @@ export default function ProductCard({ product }) {
         <h2 className="text-xl font-semibold text-primary mb-2 dark:text-light">
           {product.name}
         </h2>
-        <p className="text-base text-gray-600 mb-4">
+        <p className="text-base text-gray-600 dark:text-lighter mb-4">
           {product.description}
         </p>
         <div className="flex items-center justify-between mt-auto">

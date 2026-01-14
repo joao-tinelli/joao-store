@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingBasket, faTags, faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
+import { Link, NavLink } from "react-router-dom";
 
 export default function Header() {
   const[theme, setTheme] = useState(() => {
@@ -29,10 +30,10 @@ export default function Header() {
   return (
     <header className="border-b border-gray-300 dark:border-gray-600 sticky top-0 z-20 bg-normalbg dark:bg-darkbg">
       <div className="flex items-center justify-between mx-auto max-w-6xl px-6 py-4">
-        <a href="/" className={navLinkClass}>
+        <Link to="/" className={navLinkClass}>
           <FontAwesomeIcon icon={faTags} className="h-8 w-8" />
           <span className="font-bold">Joao Stickers</span>
-        </a>
+        </Link>
         <nav className="flex items-center py-2 z-10">
           <ul className="flex space-x-6">
             <li>
@@ -48,29 +49,29 @@ export default function Header() {
           </button>
             </li>
             <li>
-              <a href="/" className={navLinkClass}>
+              <Link to="/home" className={navLinkClass}>
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/about" className={navLinkClass}>
+              <Link to="/about" className={navLinkClass}>
                 About
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/contact" className={navLinkClass}>
+              <Link to="/contact" className={navLinkClass}>
                 Contact
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/login" className={navLinkClass}>
+              <Link to="/login" className={navLinkClass}>
                 Login
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/cart" className="text-primary py-2">
+              <Link to="/cart" className="text-primary py-2">
                 <FontAwesomeIcon icon={faShoppingBasket} className="dark:text-light" />
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
