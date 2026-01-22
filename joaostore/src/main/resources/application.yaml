@@ -4,10 +4,6 @@ spring:
 
   # debug: true
 
-  h2:
-    console:
-      enabled: true
-
   datasource:
     url: jdbc:mysql://localhost:3306/joaostore
     username: ${DATABASE_USERNAME:root}
@@ -22,3 +18,22 @@ spring:
 logging:
   pattern:
     console: "%green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15}) - %msg%n"
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: /joaostore/actuator
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+info:
+  app:
+    name: ${spring.application.name}
+    description: Backend project for JoaoStore E-commerce Application
+    version: 1.0.0
+    contact: joaotinelli@alunos.utfpr.edu.br

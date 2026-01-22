@@ -18,20 +18,14 @@ public class ContactServiceImpl implements IContactService {
 
     @Override
     public boolean saveContact(ContactRequestDto contactRequestDto) {
-       try {
-           Contact contact = transformToEntity(contactRequestDto);
-           contact.setCreatedAt(Instant.now());
-           contact.setCreatedBy(contactRequestDto.getName());
-           contactRepository.save(contact);
-           return true;
-       } catch (Exception exception){
-           return false;
-       }
+        Contact contact = transformToEntity(contactRequestDto);
+        contactRepository.save(contact);
+        return true;
     }
 
-    private Contact transformToEntity(ContactRequestDto contactRequestDto){
-        Contact newContact = new Contact();
-        BeanUtils.copyProperties(contactRequestDto, newContact);
-        return newContact;
+    private Contact transformToEntity(ContactRequestDto contactRequestDto) {
+        Contact contact = new Contact();
+        BeanUtils.copyProperties(contactRequestDto, contact);
+        return contact;
     }
 }

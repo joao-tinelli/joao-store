@@ -2,7 +2,10 @@ package com.joaotinelli.joaostore.controller;
 
 import com.joaotinelli.joaostore.dto.ContactRequestDto;
 import com.joaotinelli.joaostore.service.IContactService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +18,12 @@ public class ContactController {
 
     private final IContactService iContactService;
 
+
     @PostMapping
-    public boolean saveContact(@RequestBody ContactRequestDto contactRequestDto){
-        return iContactService.saveContact(contactRequestDto);
+    public ResponseEntity<String> saveContact(
+            @Valid @RequestBody ContactRequestDto contactRequestDto) {
+        iContactService.saveContact(contactRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Request processed successfully");
     }
 }

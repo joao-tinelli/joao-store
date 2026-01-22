@@ -1,22 +1,24 @@
-import React, { useEffect, useRef} from "react";
+import React from "react";
 import PageTitle from "./PageTitle";
-import { Form, redirect, useActionData, useNavigation, useSubmit } from "react-router-dom";
+import { Form } from "react-router-dom";
 import apiClient from "../api/apiClient";
+import { useActionData, useNavigation, useSubmit } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
+import { redirect } from "react-router-dom";
 
 export default function Contact() {
   const actionData = useActionData();
   const formRef = useRef(null);
   const navigation = useNavigation();
-  const isSubmitting = navigation.state === "submitting";
   const submit = useSubmit();
-
+  const isSubmitting = navigation.state === "submitting";
   useEffect(() => {
-    if (actionData?.success){
+    if (actionData?.success) {
       formRef.current?.reset();
       toast.success("Your message has been submitted successfully!");
     }
-  },[actionData]); // whenever actionData is changed
+  }, [actionData]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -31,7 +33,7 @@ export default function Contact() {
       toast.info("Form submission cancelled.");
     }
   };
-  
+
   const labelStyle =
     "block text-lg font-semibold text-primary dark:text-light mb-2";
   const textFieldStyle =
@@ -68,6 +70,11 @@ export default function Contact() {
             minLength={5}
             maxLength={30}
           />
+          {actionData?.errors?.name && (
+            <p className="text-red-500 text-sm mt-1">
+              {actionData.errors.name}
+            </p>
+          )}
         </div>
 
         {/* Email and mobile Row */}
@@ -85,6 +92,11 @@ export default function Contact() {
               className={textFieldStyle}
               required
             />
+            {actionData?.errors?.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {actionData.errors.email}
+              </p>
+            )}
           </div>
 
           {/* Mobile Field */}
@@ -102,6 +114,11 @@ export default function Contact() {
               placeholder="Your Mobile Number"
               className={textFieldStyle}
             />
+            {actionData?.errors?.mobileNumber && (
+              <p className="text-red-500 text-sm mt-1">
+                {actionData.errors.mobileNumber}
+              </p>
+            )}
           </div>
         </div>
 
@@ -120,6 +137,11 @@ export default function Contact() {
             minLength={5}
             maxLength={500}
           ></textarea>
+          {actionData?.errors?.message && (
+            <p className="text-red-500 text-sm mt-1">
+              {actionData.errors.message}
+            </p>
+          )}
         </div>
 
         {/* Submit Button */}
@@ -129,7 +151,7 @@ export default function Contact() {
             disabled={isSubmitting}
             className="px-6 py-2 text-white dark:text-black text-xl rounded-md transition duration-200 bg-primary dark:bg-light hover:bg-dark dark:hover:bg-lighter"
           >
-            {isSubmitting ? "Submitting": "Submit"}
+            {isSubmitting ? "Submitting..." : "Submit"}
           </button>
         </div>
       </Form>
@@ -137,24 +159,28 @@ export default function Contact() {
   );
 }
 
-export async function contactAction({request, params}){
-  const data = await request.formData();  
+export async function contactAction({ request, params }) {
+  const data = await request.formData();
+
   const contactData = {
     name: data.get("name"),
     email: data.get("email"),
     mobileNumber: data.get("mobileNumber"),
     message: data.get("message"),
   };
-
   try {
     await apiClient.post("/contacts", contactData);
-    //return redirect("/home");
     return { success: true };
-
-  } catch (error){
-      throw new Response(
-        error.message || "Failed to submit your message. Please try again.",
-        {status: error.status || 500}
-      );
+    // return redirect("/home");
+  } catch (error) {
+    if (error.response?.status === 400) {
+      return { success: false, errors: error.response?.data };
     }
+    throw new Response(
+      error.response?.data?.errorMessage ||
+        error.message ||
+        "Failed to submit your message. Please try again.",
+      { status: error.status || 500 }
+    );
+  }
 }
